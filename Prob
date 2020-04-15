@@ -1,0 +1,57 @@
+import numpy as np
+import math 
+
+class Dice:
+  def __init__(self,throws):
+    self.throws=throws
+    self.dist=[0]
+
+
+  def calc_dist(self):
+    sum=0
+    
+    print("Please enter the correct probabilty distribution ")          
+    for i in range(1,7):
+      print("Enter the probability of ",i," :")
+      x=eval(input())  
+      self.dist.append(x)
+      sum+=self.dist[i]
+    return self.dist[1:]
+
+
+  def nCr(self,n, r): 
+  
+    return (self.fact(n) / (self.fact(r)  
+                * self.fact(n - r))) 
+  
+# Returns factorial of n 
+  def fact(self,n): 
+  
+    res = 1
+      
+    for i in range(2, n+1): 
+        res = res * i 
+          
+    return res 
+  
+ 
+  def calc_probability(self):
+    n= (self.throws-60)//2
+    x=self.throws
+    
+    probability=0
+    for p in range (0,84):
+      for q in range (0,62):
+        for r in range (0,50):
+          for s in range (0,41):
+            for t in range(0,35):
+              N=n+2*p+3*q+4*r+5*s+6*t
+              y=N-p-q-r-s-t
+              if (N<=self.throws):
+                probability = probability + (math.pow((self.dist[1]+self.dist[2]),(n+p+2*q+3*r+4*s+5*t))) * (math.pow((self.dist[2]*self.dist[6]),p)) * (math.pow((self.dist[3]*self.dist[6]),q)) * (math.pow((self.dist[4]*self.dist[6]),r)) * (math.pow((self.dist[5]*self.dist[6]),s)) * (math.pow((self.dist[6]*self.dist[6]),t)) * (math.pow((self.dist[3]+self.dist[4]+self.dist[5]+self.dist[1]*self.dist[6]), (self.throws-N))) * self.nCr(x,y) * self.nCr((x-y),p) * self.nCr((x-y-p),q) * self.nCr((x-y-p-q),r) * self.nCr((x-y-p-q-r),s) * self.nCr((x-y-p-q-r-s),t)          
+    return probability
+
+throws=eval(input("Enter no. of throws"))
+ob1=Dice(throws)
+print(ob1.calc_dist())
+print("The probability of climbing 60 or more steps is: ", 1-ob1.calc_probability())
